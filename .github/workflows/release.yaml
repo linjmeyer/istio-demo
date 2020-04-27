@@ -22,4 +22,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: linjmeyer/istio-demo-integration-tests
-          path: tests.Dockerfile
+          dockerfile: tests.Dockerfile

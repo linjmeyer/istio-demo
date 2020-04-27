@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /app
-COPY . /build
+COPY src/IstioDemoDotNet.Tests.Integration /build
 RUN dotnet publish /build -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS runtime

@@ -3,13 +3,24 @@ name: Main
 on: [push, pull_request]
 
 jobs:
-  build-and-release:
+  build-asp:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Build Docker Image
+        
+      - name: Build Docker Image ASP
         uses: docker/build-push-action@v1
+        working-directory: src/IstioDemoDotNet
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: linjmeyer/istio-demo-asp
+        
+      - name: Build Docker Image Tests
+        uses: docker/build-push-action@v1
+        working-directory: src/IstioDemoDotNet.Tests.Integration
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: linjmeyer/istio-demo-integration-tests

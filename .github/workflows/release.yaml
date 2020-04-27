@@ -15,7 +15,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: linjmeyer/istio-demo-asp
-          path: src/IstioDemoDotNet
         
       - name: Build Docker Image Tests
         uses: docker/build-push-action@v1
@@ -23,4 +22,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: linjmeyer/istio-demo-integration-tests
-          path: src/IstioDemoDotNet.Tests.Integration/Dockerfile
+          path: tests.Dockerfile

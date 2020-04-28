@@ -6,7 +6,6 @@ namespace IstioDemoDotNet
 {
     public class DemoEnvironment
     {
-        public bool IsCanary { get; }
         public string EnvironmentName { get; }
 
         public DemoEnvironment(IWebHostEnvironment hostEnvironment)
@@ -14,13 +13,11 @@ namespace IstioDemoDotNet
             // In debug mode fake some values
             if (hostEnvironment.IsDevelopment())
             {
-                IsCanary = true;
-                EnvironmentName = hostEnvironment.EnvironmentName;
+                EnvironmentName = "DEVELOPMENT";
                 return;
             }
             
             // Else get them from env vars set by Spinnaker
-            IsCanary = String.Equals(Environment.GetEnvironmentVariable("DEMO_IS_CANARY"), "true", StringComparison.OrdinalIgnoreCase);
             EnvironmentName = Environment.GetEnvironmentVariable("DEMO_ENVIRONMENT_NAME");
         }
     }

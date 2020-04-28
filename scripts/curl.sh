@@ -1,0 +1,1 @@
+while true; do curl demo/api/demo && echo ""; done

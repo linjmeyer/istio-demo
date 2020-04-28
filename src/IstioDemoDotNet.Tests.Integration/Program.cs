@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace IstioDemoDotNet.Tests.Integration
@@ -50,15 +49,14 @@ namespace IstioDemoDotNet.Tests.Integration
 
         static async Task<bool> DoTests()
         {
-            using (var client = new HttpClient())
+            
+            var url = GetUrl();
+            for (var i = 0; i < 50; i++)
             {
-                var url = GetUrl();
-                for (var i = 0; i < 25; i++)
-                {
-                    var result = await client.GetAsync(url);
-                    var resultBodyJson = await result.Content.ReadAsStringAsync();
-                    Console.WriteLine(resultBodyJson.RemoveNewlines());
-                }
+                using var client = new HttpClient();
+                var result = await client.GetAsync(url);
+                var resultBodyJson = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultBodyJson.RemoveNewlines());
             }
 
             return true;

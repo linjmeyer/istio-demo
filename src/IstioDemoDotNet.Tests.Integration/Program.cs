@@ -13,7 +13,6 @@ namespace IstioDemoDotNet.Tests.Integration
         {
             Console.WriteLine("I am a placeholder for real integration tests!");
             Console.WriteLine("Tests starting....");
-            Console.WriteLine("Results: ");
 
             if (ShouldFail(args)) return Fail();
             

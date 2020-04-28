@@ -56,7 +56,8 @@ namespace IstioDemoDotNet.Tests.Integration
                 using var client = new HttpClient();
                 var result = await client.GetAsync(url);
                 var resultBodyJson = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultBodyJson.RemoveNewlines());
+                var serverHeader = result.Headers.Server.ToString();
+                Console.WriteLine($"Content: {resultBodyJson.RemoveNewlines()}, Server: {serverHeader}");
             }
 
             return true;

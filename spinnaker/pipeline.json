@@ -1,0 +1,612 @@
+{
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "lin.meyer@redbox.com",
+  "limitConcurrent": true,
+  "spelEvaluator": "v4",
+  "stages": [
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "labels": {
+              "app": "demo",
+              "environment": "canary"
+            },
+            "name": "demo-canary",
+            "namespace": "demo"
+          },
+          "spec": {
+            "replicas": 3,
+            "selector": {
+              "matchLabels": {
+                "app": "demo",
+                "environment": "canary"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "demo",
+                  "environment": "canary"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "env": [
+                      {
+                        "name": "DEMO_ENVIRONMENT_NAME",
+                        "value": "canary"
+                      }
+                    ],
+                    "image": "linjmeyer/istio-demo-asp",
+                    "name": "demo",
+                    "ports": [
+                      {
+                        "containerPort": 80
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "apiVersion": "v1",
+          "kind": "Service",
+          "metadata": {
+            "name": "demo"
+          },
+          "spec": {
+            "ports": [
+              {
+                "port": 80,
+                "protocol": "TCP",
+                "targetPort": 80
+              }
+            ],
+            "selector": {
+              "app": "demo"
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Canary: Deploy",
+      "namespaceOverride": "demo",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "batch/v1",
+          "kind": "Job",
+          "metadata": {
+            "annotations": {
+              "strategy.spinnaker.io/recreate": "true"
+            },
+            "name": "integration-tests",
+            "namespace": "demo"
+          },
+          "spec": {
+            "backoffLimit": 0,
+            "template": {
+              "metadata": {
+                "labels": {
+                  "demo-test-environment": "canary"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "env": [
+                      {
+                        "name": "DEMO_TESTS_FAIL",
+                        "value": "false"
+                      },
+                      {
+                        "name": "DEMO_TESTS_URL",
+                        "value": "http://demo/api/demo"
+                      },
+                      {
+                        "name": "ENVOY_ADMIN_API",
+                        "value": "http://127.0.0.1:15000"
+                      },
+                      {
+                        "name": "SCUTTLE_LOGGING",
+                        "value": "true"
+                      },
+                      {
+                        "name": "ISTIO_QUIT_API",
+                        "value": "http://127.0.0.1:15020"
+                      }
+                    ],
+                    "image": "linjmeyer/istio-demo-integration-tests",
+                    "imagePullPolicy": "Always",
+                    "name": "integration-tests"
+                  }
+                ],
+                "restartPolicy": "Never"
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Canary: Run Tests",
+      "namespaceOverride": "demo",
+      "refId": "3",
+      "requisiteStageRefIds": [
+        "8"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "failPipeline": true,
+      "judgmentInputs": [],
+      "name": "Promote to prod?",
+      "notifications": [],
+      "refId": "4",
+      "requisiteStageRefIds": [
+        "3"
+      ],
+      "type": "manualJudgment"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "labels": {
+              "app": "demo",
+              "environment": "prod"
+            },
+            "name": "demo-prod",
+            "namespace": "demo"
+          },
+          "spec": {
+            "replicas": 3,
+            "selector": {
+              "matchLabels": {
+                "app": "demo",
+                "environment": "prod"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "demo",
+                  "environment": "prod"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "env": [
+                      {
+                        "name": "DEMO_ENVIRONMENT_NAME",
+                        "value": "prod"
+                      }
+                    ],
+                    "image": "linjmeyer/istio-demo-asp",
+                    "name": "demo",
+                    "ports": [
+                      {
+                        "containerPort": 80
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "apiVersion": "v1",
+          "kind": "Service",
+          "metadata": {
+            "name": "demo"
+          },
+          "spec": {
+            "ports": [
+              {
+                "port": 80,
+                "protocol": "TCP",
+                "targetPort": 80
+              }
+            ],
+            "selector": {
+              "app": "demo"
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Prod: Deploy",
+      "namespaceOverride": "demo",
+      "refId": "5",
+      "requisiteStageRefIds": [
+        "4"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "batch/v1",
+          "kind": "Job",
+          "metadata": {
+            "annotations": {
+              "strategy.spinnaker.io/recreate": "true"
+            },
+            "name": "integration-tests",
+            "namespace": "demo"
+          },
+          "spec": {
+            "backoffLimit": 0,
+            "template": {
+              "metadata": {
+                "labels": {
+                  "demo-test-environment": "prod"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "env": [
+                      {
+                        "name": "DEMO_TESTS_FAIL",
+                        "value": "false"
+                      },
+                      {
+                        "name": "DEMO_TESTS_URL",
+                        "value": "http://demo/api/demo"
+                      },
+                      {
+                        "name": "ENVOY_ADMIN_API",
+                        "value": "http://127.0.0.1:15000"
+                      },
+                      {
+                        "name": "SCUTTLE_LOGGING",
+                        "value": "true"
+                      },
+                      {
+                        "name": "ISTIO_QUIT_API",
+                        "value": "http://127.0.0.1:15020"
+                      }
+                    ],
+                    "image": "linjmeyer/istio-demo-integration-tests",
+                    "imagePullPolicy": "Always",
+                    "name": "integration-tests"
+                  }
+                ],
+                "restartPolicy": "Never"
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Prod: Run Tests",
+      "refId": "6",
+      "requisiteStageRefIds": [
+        "9"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "app": "gdg-demo-app",
+      "cloudProvider": "kubernetes",
+      "kinds": [
+        "deployment"
+      ],
+      "labelSelectors": {
+        "selectors": [
+          {
+            "key": "app",
+            "kind": "EQUALS",
+            "values": [
+              "demo"
+            ]
+          },
+          {
+            "key": "environment",
+            "kind": "EQUALS",
+            "values": [
+              "canary"
+            ]
+          }
+        ]
+      },
+      "location": "demo",
+      "mode": "label",
+      "name": "Canary: Cleanup",
+      "options": {
+        "cascading": true
+      },
+      "refId": "7",
+      "requisiteStageRefIds": [
+        "6"
+      ],
+      "type": "deleteManifest"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "DestinationRule",
+          "metadata": {
+            "name": "demo",
+            "namespace": "demo"
+          },
+          "spec": {
+            "host": "demo.demo.svc.cluster.local",
+            "subsets": [
+              {
+                "labels": {
+                  "app": "demo",
+                  "environment": "prod"
+                },
+                "name": "prod"
+              },
+              {
+                "labels": {
+                  "app": "demo",
+                  "environment": "canary"
+                },
+                "name": "canary"
+              }
+            ]
+          }
+        },
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "demo",
+            "namespace": "demo"
+          },
+          "spec": {
+            "gateways": [
+              "demo-gateway"
+            ],
+            "hosts": [
+              "demo.demo.svc.cluster.local",
+              "demo.lin"
+            ],
+            "http": [
+              {
+                "match": [
+                  {
+                    "headers": {
+                      "x-demo-environment": {
+                        "exact": "canary"
+                      }
+                    }
+                  },
+                  {
+                    "sourceLabels": {
+                      "demo-test-environment": "canary"
+                    }
+                  }
+                ],
+                "route": [
+                  {
+                    "destination": {
+                      "host": "demo.demo.svc.cluster.local",
+                      "subset": "canary"
+                    }
+                  }
+                ]
+              },
+              {
+                "match": [
+                  {
+                    "headers": {
+                      "x-demo-environment": {
+                        "exact": "prod"
+                      }
+                    }
+                  },
+                  {
+                    "sourceLabels": {
+                      "demo-test-environment": "prod"
+                    }
+                  }
+                ],
+                "route": [
+                  {
+                    "destination": {
+                      "host": "demo.demo.svc.cluster.local",
+                      "subset": "prod"
+                    }
+                  }
+                ]
+              },
+              {
+                "route": [
+                  {
+                    "destination": {
+                      "host": "demo.demo.svc.cluster.local",
+                      "subset": "canary"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "demo.demo.svc.cluster.local",
+                      "subset": "prod"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Canary: Istio Routes",
+      "refId": "8",
+      "requisiteStageRefIds": [
+        "1"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "spinnaker-install-account",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "DestinationRule",
+          "metadata": {
+            "name": "demo",
+            "namespace": "demo"
+          },
+          "spec": {
+            "host": "demo.demo.svc.cluster.local",
+            "subsets": [
+              {
+                "labels": {
+                  "app": "demo",
+                  "environment": "prod"
+                },
+                "name": "prod"
+              },
+              {
+                "labels": {
+                  "app": "demo",
+                  "environment": "canary"
+                },
+                "name": "canary"
+              }
+            ]
+          }
+        },
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "demo",
+            "namespace": "demo"
+          },
+          "spec": {
+            "gateways": [
+              "demo-gateway"
+            ],
+            "hosts": [
+              "demo.demo.svc.cluster.local",
+              "demo.lin"
+            ],
+            "http": [
+              {
+                "route": [
+                  {
+                    "destination": {
+                      "host": "demo.demo.svc.cluster.local",
+                      "subset": "prod"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "gdg-demo-app"
+      },
+      "name": "Prod: Istio Routes",
+      "namespaceOverride": "demo",
+      "refId": "9",
+      "requisiteStageRefIds": [
+        "5"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    }
+  ],
+  "triggers": [],
+  "updateTs": "1588099856015"
+}

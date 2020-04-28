@@ -11,7 +11,7 @@ namespace IstioDemoDotNet.Tests.Integration
             Console.WriteLine("I am a placeholder for real integration tests!");
             Console.WriteLine("Tests starting....");
             Console.WriteLine("Results: ");
-            if (args.Any(a => string.Equals("--fail", a, StringComparison.OrdinalIgnoreCase)))
+            if (ShouldFail(args))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("All Tests failed!");
@@ -21,6 +21,13 @@ namespace IstioDemoDotNet.Tests.Integration
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("All Tests passed!");
             return 0;
+        }
+
+        static bool ShouldFail(string[] args)
+        {
+            return args.Any(a => string.Equals("--fail", a, StringComparison.OrdinalIgnoreCase))
+                   || string.Equals(Environment.GetEnvironmentVariable("DEMO_TESTS_FAIL"), "true",
+                       StringComparison.OrdinalIgnoreCase);
         }
     }
 }

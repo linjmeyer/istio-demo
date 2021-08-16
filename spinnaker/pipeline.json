@@ -607,6 +607,5 @@
       "type": "deployManifest"
     }
   ],
-  "triggers": [],
-  "updateTs": "1588099856015"
+  "triggers": []
 }

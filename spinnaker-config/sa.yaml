@@ -3,6 +3,9 @@ kind: ClusterRole
 metadata:
   name: spinnaker-role
 rules:
+  - apiGroups: ['networking.istio.io']
+    resources: [ '*' ]
+    verbs: [ '*' ]
   - apiGroups: ['']
     resources:
       [
@@ -33,8 +36,8 @@ rules:
   - apiGroups: ['apps']
     resources: ['controllerrevisions', 'statefulsets']
     verbs: ['list']
-  - apiGroups: ['extensions', 'apps']
-    resources: ['deployments', 'replicasets', 'ingresses']
+  - apiGroups: ['extensions', 'apps', 'batch']
+    resources: ['deployments', 'replicasets', 'ingresses', 'jobs']
     verbs:
       [
         'create',

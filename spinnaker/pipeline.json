@@ -169,7 +169,7 @@
           "enableTraffic": false
         }
       },
-      "type": "deployManifest"
+      "type": "runJobManifest"
     },
     {
       "failPipeline": true,
@@ -347,7 +347,7 @@
           "enableTraffic": false
         }
       },
-      "type": "deployManifest"
+      "type": "runJobManifest"
     },
     {
       "account": "spinnaker-install-account",

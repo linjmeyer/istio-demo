@@ -1,11 +1,12 @@
 {
+  "appConfig": {},
   "keepWaitingPipelines": false,
-  "lastModifiedBy": "lin.meyer@redbox.com",
+  "lastModifiedBy": "anonymous",
   "limitConcurrent": true,
   "spelEvaluator": "v4",
   "stages": [
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -88,14 +89,13 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -166,8 +166,7 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
@@ -184,7 +183,7 @@
       "type": "manualJudgment"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -269,14 +268,13 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -346,8 +344,7 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
@@ -390,7 +387,7 @@
       "type": "deleteManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -519,14 +516,13 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -600,12 +596,12 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     }
   ],
-  "triggers": []
+  "triggers": [],
+  "updateTs": "1629148226363"
 }

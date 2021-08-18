@@ -60,7 +60,7 @@ namespace IstioDemoDotNet.Tests.Integration
                 result.Headers.TryGetValues("x-demo-canary-active", out var canaryActiveHeader);
                 result.Headers.TryGetValues("x-demo-routing-decision", out var routingDecision);
                 Console.WriteLine($"Content: {resultBodyJson.RemoveNewlines()}, Server: {serverHeader} " +
-                    $"Canary Active: {canaryActiveHeader}, Routing Decision: {routingDecision}");
+                    $"Canary Active: {canaryActiveHeader.FirstOrDefault()}, Routing Decision: {routingDecision.FirstOrDefault()}");
             }
 
             return true;

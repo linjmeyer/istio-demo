@@ -1,11 +1,12 @@
 {
+  "appConfig": {},
   "keepWaitingPipelines": false,
-  "lastModifiedBy": "lin.meyer@redbox.com",
+  "lastModifiedBy": "anonymous",
   "limitConcurrent": true,
   "spelEvaluator": "v4",
   "stages": [
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -88,70 +89,69 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
+      "alias": "runJob",
+      "application": "istio-demo",
       "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "batch/v1",
-          "kind": "Job",
-          "metadata": {
-            "annotations": {
-              "strategy.spinnaker.io/recreate": "true"
-            },
-            "name": "integration-tests",
-            "namespace": "demo"
+      "manifest": {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "metadata": {
+          "annotations": {
+            "strategy.spinnaker.io/recreate": "true"
           },
-          "spec": {
-            "backoffLimit": 0,
-            "template": {
-              "metadata": {
-                "labels": {
-                  "demo-test-environment": "canary"
-                }
-              },
-              "spec": {
-                "containers": [
-                  {
-                    "env": [
-                      {
-                        "name": "DEMO_TESTS_FAIL",
-                        "value": "false"
-                      },
-                      {
-                        "name": "DEMO_TESTS_URL",
-                        "value": "http://demo/api/demo"
-                      },
-                      {
-                        "name": "ENVOY_ADMIN_API",
-                        "value": "http://127.0.0.1:15000"
-                      },
-                      {
-                        "name": "SCUTTLE_LOGGING",
-                        "value": "true"
-                      },
-                      {
-                        "name": "ISTIO_QUIT_API",
-                        "value": "http://127.0.0.1:15020"
-                      }
-                    ],
-                    "image": "linjmeyer/istio-demo-integration-tests",
-                    "imagePullPolicy": "Always",
-                    "name": "integration-tests"
-                  }
-                ],
-                "restartPolicy": "Never"
+          "name": "integration-tests",
+          "namespace": "demo"
+        },
+        "spec": {
+          "backoffLimit": 0,
+          "template": {
+            "metadata": {
+              "labels": {
+                "demo-test-environment": "canary"
               }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "env": [
+                    {
+                      "name": "DEMO_TESTS_FAIL",
+                      "value": "false"
+                    },
+                    {
+                      "name": "DEMO_TESTS_URL",
+                      "value": "http://demo/api/demo"
+                    },
+                    {
+                      "name": "ENVOY_ADMIN_API",
+                      "value": "http://127.0.0.1:15000"
+                    },
+                    {
+                      "name": "SCUTTLE_LOGGING",
+                      "value": "true"
+                    },
+                    {
+                      "name": "ISTIO_QUIT_API",
+                      "value": "http://127.0.0.1:15020"
+                    }
+                  ],
+                  "image": "linjmeyer/istio-demo-integration-tests",
+                  "imagePullPolicy": "Always",
+                  "name": "integration-tests"
+                }
+              ],
+              "restartPolicy": "Never"
             }
           }
         }
-      ],
+      },
       "moniker": {
         "app": "gdg-demo-app"
       },
@@ -166,11 +166,10 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
-      "type": "deployManifest"
+      "type": "runJobManifest"
     },
     {
       "failPipeline": true,
@@ -184,7 +183,7 @@
       "type": "manualJudgment"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -269,70 +268,69 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
+      "alias": "runJob",
+      "application": "istio-demo",
       "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "batch/v1",
-          "kind": "Job",
-          "metadata": {
-            "annotations": {
-              "strategy.spinnaker.io/recreate": "true"
-            },
-            "name": "integration-tests",
-            "namespace": "demo"
+      "manifest": {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "metadata": {
+          "annotations": {
+            "strategy.spinnaker.io/recreate": "true"
           },
-          "spec": {
-            "backoffLimit": 0,
-            "template": {
-              "metadata": {
-                "labels": {
-                  "demo-test-environment": "prod"
-                }
-              },
-              "spec": {
-                "containers": [
-                  {
-                    "env": [
-                      {
-                        "name": "DEMO_TESTS_FAIL",
-                        "value": "false"
-                      },
-                      {
-                        "name": "DEMO_TESTS_URL",
-                        "value": "http://demo/api/demo"
-                      },
-                      {
-                        "name": "ENVOY_ADMIN_API",
-                        "value": "http://127.0.0.1:15000"
-                      },
-                      {
-                        "name": "SCUTTLE_LOGGING",
-                        "value": "true"
-                      },
-                      {
-                        "name": "ISTIO_QUIT_API",
-                        "value": "http://127.0.0.1:15020"
-                      }
-                    ],
-                    "image": "linjmeyer/istio-demo-integration-tests",
-                    "imagePullPolicy": "Always",
-                    "name": "integration-tests"
-                  }
-                ],
-                "restartPolicy": "Never"
+          "name": "integration-tests",
+          "namespace": "demo"
+        },
+        "spec": {
+          "backoffLimit": 0,
+          "template": {
+            "metadata": {
+              "labels": {
+                "demo-test-environment": "prod"
               }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "env": [
+                    {
+                      "name": "DEMO_TESTS_FAIL",
+                      "value": "false"
+                    },
+                    {
+                      "name": "DEMO_TESTS_URL",
+                      "value": "http://demo/api/demo"
+                    },
+                    {
+                      "name": "ENVOY_ADMIN_API",
+                      "value": "http://127.0.0.1:15000"
+                    },
+                    {
+                      "name": "SCUTTLE_LOGGING",
+                      "value": "true"
+                    },
+                    {
+                      "name": "ISTIO_QUIT_API",
+                      "value": "http://127.0.0.1:15020"
+                    }
+                  ],
+                  "image": "linjmeyer/istio-demo-integration-tests",
+                  "imagePullPolicy": "Always",
+                  "name": "integration-tests"
+                }
+              ],
+              "restartPolicy": "Never"
             }
           }
         }
-      ],
+      },
       "moniker": {
         "app": "gdg-demo-app"
       },
@@ -346,51 +344,13 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
-      "type": "deployManifest"
+      "type": "runJobManifest"
     },
     {
-      "account": "spinnaker-install-account",
-      "app": "gdg-demo-app",
-      "cloudProvider": "kubernetes",
-      "kinds": [
-        "deployment"
-      ],
-      "labelSelectors": {
-        "selectors": [
-          {
-            "key": "app",
-            "kind": "EQUALS",
-            "values": [
-              "demo"
-            ]
-          },
-          {
-            "key": "environment",
-            "kind": "EQUALS",
-            "values": [
-              "canary"
-            ]
-          }
-        ]
-      },
-      "location": "demo",
-      "mode": "label",
-      "name": "Canary: Cleanup",
-      "options": {
-        "cascading": true
-      },
-      "refId": "7",
-      "requisiteStageRefIds": [
-        "6"
-      ],
-      "type": "deleteManifest"
-    },
-    {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -428,12 +388,8 @@
             "namespace": "demo"
           },
           "spec": {
-            "gateways": [
-              "demo-gateway"
-            ],
             "hosts": [
-              "demo.demo.svc.cluster.local",
-              "demo.lin"
+              "demo.demo.svc.cluster.local"
             ],
             "http": [
               {
@@ -456,6 +412,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "canary"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "canary"
+                        }
+                      }
                     }
                   }
                 ]
@@ -480,6 +444,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "prod"
+                        }
+                      }
                     }
                   }
                 ]
@@ -491,12 +463,28 @@
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "canary"
                     },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "weight"
+                        }
+                      }
+                    },
                     "weight": 50
                   },
                   {
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "weight"
+                        }
+                      }
                     },
                     "weight": 50
                   }
@@ -519,14 +507,13 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
     },
     {
-      "account": "spinnaker-install-account",
+      "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
         {
@@ -564,12 +551,8 @@
             "namespace": "demo"
           },
           "spec": {
-            "gateways": [
-              "demo-gateway"
-            ],
             "hosts": [
-              "demo.demo.svc.cluster.local",
-              "demo.lin"
+              "demo.demo.svc.cluster.local"
             ],
             "http": [
               {
@@ -578,6 +561,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "false",
+                          "x-demo-routing-decision": "prod"
+                        }
+                      }
                     }
                   }
                 ]
@@ -600,13 +591,48 @@
       "trafficManagement": {
         "enabled": false,
         "options": {
-          "enableTraffic": false,
-          "services": []
+          "enableTraffic": false
         }
       },
       "type": "deployManifest"
+    },
+    {
+      "account": "kubernetes",
+      "app": "istio-demo",
+      "cloudProvider": "kubernetes",
+      "kinds": [
+        "deployment"
+      ],
+      "labelSelectors": {
+        "selectors": [
+          {
+            "key": "app",
+            "kind": "EQUALS",
+            "values": [
+              "demo"
+            ]
+          },
+          {
+            "key": "environment",
+            "kind": "EQUALS",
+            "values": [
+              "canary"
+            ]
+          }
+        ]
+      },
+      "location": "demo",
+      "mode": "label",
+      "name": "Delete (Manifest)",
+      "options": {
+        "cascading": true
+      },
+      "refId": "10",
+      "requisiteStageRefIds": [
+        "6"
+      ],
+      "type": "deleteManifest"
     }
   ],
-  "triggers": [],
-  "updateTs": "1588099856015"
+  "triggers": []
 }

@@ -1,0 +1,43 @@
+apiVersion: spinnaker.io/v1alpha2
+kind: SpinnakerService
+metadata:
+  name: spinnaker
+  namespace: spinnaker
+spec:
+  spinnakerConfig:
+    config:
+      version: 1.26.6   # the version of Spinnaker to be deployed
+      persistentStorage:
+        persistentStoreType: gcs
+        gcs:
+          jsonPath: encryptedFile:k8s!n:spinnaker-secrets!k:gcs-key
+          project: redbox-devops-sandbox-k8s
+          bucket: spinnaker-istio-demo
+          rootFolder: front50
+          bucketLocation: "us"
+      providers:
+        kubernetes: 
+          enabled: true 
+          accounts: 
+          - name: kubernetes
+            requiredGroupMembership: []
+            providerVersion: V2 
+            permissions: {} 
+            dockerRegistries: [] 
+            configureImagePullSecrets: true 
+            cacheThreads: 1 
+            namespaces: [] 
+            omitNamespaces: [] 
+            kinds: [] 
+            omitKinds: [] 
+            customResources: [] 
+            cachingPolicies: [] 
+            oAuthScopes: [] 
+            onlySpinnakerManaged: false 
+            kubeconfigFile: encryptedFile:k8s!n:spinnaker-secrets!k:kube-config # secret name: spinnaker-secrets, secret key: kube-staging-kubeconfig 
+          primaryAccount: kubernetes
+  # spec.expose - This section defines how Spinnaker should be publicly exposed
+  expose:
+    type: service  # Kubernetes LoadBalancer type (service/ingress), note: only "service" is supported for now
+    service:
+      type: ClusterIP

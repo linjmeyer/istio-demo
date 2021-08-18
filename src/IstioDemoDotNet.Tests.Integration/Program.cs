@@ -59,7 +59,7 @@ namespace IstioDemoDotNet.Tests.Integration
                 var serverHeader = result.Headers.Server.ToString();
                 result.Headers.TryGetValues("x-demo-canary-active", out var canaryActiveHeader);
                 result.Headers.TryGetValues("x-demo-routing-decision", out var routingDecision);
-                Console.WriteLine($"Content: {resultBodyJson.RemoveNewlines()}, Server: {serverHeader} " +
+                Console.WriteLine($"Content: {resultBodyJson.RemoveNewlines()}, Server: {serverHeader}, " +
                     $"Canary Active: {canaryActiveHeader.FirstOrDefault()}, Routing Decision: {routingDecision.FirstOrDefault()}");
             }
 

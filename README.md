@@ -25,4 +25,11 @@ Create a new application in Spinnaker, and a new pipeline.  Edit the pipeline as
 
 (Port forward Spinnaker if not already done)
 
-### 
+### Trigger canary pipeline
+
+Monitor output of integration tests, ensure "canary" is the response
+Optionally, run scripts in scripts/script-deployment.yaml manually to verify.
+
+### Continue to Prod 
+
+Once you have verified canary is working, continue to the prod portion of thep pipeline.  You should only see "prod" responses from integration tests and CURL output in scripts.

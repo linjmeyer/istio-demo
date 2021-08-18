@@ -350,43 +350,6 @@
       "type": "runJobManifest"
     },
     {
-      "account": "spinnaker-install-account",
-      "app": "gdg-demo-app",
-      "cloudProvider": "kubernetes",
-      "kinds": [
-        "deployment"
-      ],
-      "labelSelectors": {
-        "selectors": [
-          {
-            "key": "app",
-            "kind": "EQUALS",
-            "values": [
-              "demo"
-            ]
-          },
-          {
-            "key": "environment",
-            "kind": "EQUALS",
-            "values": [
-              "canary"
-            ]
-          }
-        ]
-      },
-      "location": "demo",
-      "mode": "label",
-      "name": "Canary: Cleanup",
-      "options": {
-        "cascading": true
-      },
-      "refId": "7",
-      "requisiteStageRefIds": [
-        "6"
-      ],
-      "type": "deleteManifest"
-    },
-    {
       "account": "kubernetes",
       "cloudProvider": "kubernetes",
       "manifests": [
@@ -425,12 +388,8 @@
             "namespace": "demo"
           },
           "spec": {
-            "gateways": [
-              "demo-gateway"
-            ],
             "hosts": [
-              "demo.demo.svc.cluster.local",
-              "demo.lin"
+              "demo.demo.svc.cluster.local"
             ],
             "http": [
               {
@@ -453,6 +412,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "canary"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "canary"
+                        }
+                      }
                     }
                   }
                 ]
@@ -477,6 +444,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "prod"
+                        }
+                      }
                     }
                   }
                 ]
@@ -488,12 +463,28 @@
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "canary"
                     },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "weight"
+                        }
+                      }
+                    },
                     "weight": 50
                   },
                   {
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "true",
+                          "x-demo-routing-decision": "weight"
+                        }
+                      }
                     },
                     "weight": 50
                   }
@@ -560,12 +551,8 @@
             "namespace": "demo"
           },
           "spec": {
-            "gateways": [
-              "demo-gateway"
-            ],
             "hosts": [
-              "demo.demo.svc.cluster.local",
-              "demo.lin"
+              "demo.demo.svc.cluster.local"
             ],
             "http": [
               {
@@ -574,6 +561,14 @@
                     "destination": {
                       "host": "demo.demo.svc.cluster.local",
                       "subset": "prod"
+                    },
+                    "headers": {
+                      "response": {
+                        "add": {
+                          "x-demo-canary-active": "false",
+                          "x-demo-routing-decision": "prod"
+                        }
+                      }
                     }
                   }
                 ]
@@ -600,6 +595,43 @@
         }
       },
       "type": "deployManifest"
+    },
+    {
+      "account": "kubernetes",
+      "app": "istio-demo",
+      "cloudProvider": "kubernetes",
+      "kinds": [
+        "deployment"
+      ],
+      "labelSelectors": {
+        "selectors": [
+          {
+            "key": "app",
+            "kind": "EQUALS",
+            "values": [
+              "demo"
+            ]
+          },
+          {
+            "key": "environment",
+            "kind": "EQUALS",
+            "values": [
+              "canary"
+            ]
+          }
+        ]
+      },
+      "location": "demo",
+      "mode": "label",
+      "name": "Delete (Manifest)",
+      "options": {
+        "cascading": true
+      },
+      "refId": "10",
+      "requisiteStageRefIds": [
+        "6"
+      ],
+      "type": "deleteManifest"
     }
   ],
   "triggers": []

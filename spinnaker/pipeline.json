@@ -96,62 +96,62 @@
     },
     {
       "account": "kubernetes",
+      "alias": "runJob",
+      "application": "istio-demo",
       "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "batch/v1",
-          "kind": "Job",
-          "metadata": {
-            "annotations": {
-              "strategy.spinnaker.io/recreate": "true"
-            },
-            "name": "integration-tests",
-            "namespace": "demo"
+      "manifest": {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "metadata": {
+          "annotations": {
+            "strategy.spinnaker.io/recreate": "true"
           },
-          "spec": {
-            "backoffLimit": 0,
-            "template": {
-              "metadata": {
-                "labels": {
-                  "demo-test-environment": "canary"
-                }
-              },
-              "spec": {
-                "containers": [
-                  {
-                    "env": [
-                      {
-                        "name": "DEMO_TESTS_FAIL",
-                        "value": "false"
-                      },
-                      {
-                        "name": "DEMO_TESTS_URL",
-                        "value": "http://demo/api/demo"
-                      },
-                      {
-                        "name": "ENVOY_ADMIN_API",
-                        "value": "http://127.0.0.1:15000"
-                      },
-                      {
-                        "name": "SCUTTLE_LOGGING",
-                        "value": "true"
-                      },
-                      {
-                        "name": "ISTIO_QUIT_API",
-                        "value": "http://127.0.0.1:15020"
-                      }
-                    ],
-                    "image": "linjmeyer/istio-demo-integration-tests",
-                    "imagePullPolicy": "Always",
-                    "name": "integration-tests"
-                  }
-                ],
-                "restartPolicy": "Never"
+          "name": "integration-tests",
+          "namespace": "demo"
+        },
+        "spec": {
+          "backoffLimit": 0,
+          "template": {
+            "metadata": {
+              "labels": {
+                "demo-test-environment": "canary"
               }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "env": [
+                    {
+                      "name": "DEMO_TESTS_FAIL",
+                      "value": "false"
+                    },
+                    {
+                      "name": "DEMO_TESTS_URL",
+                      "value": "http://demo/api/demo"
+                    },
+                    {
+                      "name": "ENVOY_ADMIN_API",
+                      "value": "http://127.0.0.1:15000"
+                    },
+                    {
+                      "name": "SCUTTLE_LOGGING",
+                      "value": "true"
+                    },
+                    {
+                      "name": "ISTIO_QUIT_API",
+                      "value": "http://127.0.0.1:15020"
+                    }
+                  ],
+                  "image": "linjmeyer/istio-demo-integration-tests",
+                  "imagePullPolicy": "Always",
+                  "name": "integration-tests"
+                }
+              ],
+              "restartPolicy": "Never"
             }
           }
         }
-      ],
+      },
       "moniker": {
         "app": "gdg-demo-app"
       },
@@ -275,62 +275,62 @@
     },
     {
       "account": "kubernetes",
+      "alias": "runJob",
+      "application": "istio-demo",
       "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "batch/v1",
-          "kind": "Job",
-          "metadata": {
-            "annotations": {
-              "strategy.spinnaker.io/recreate": "true"
-            },
-            "name": "integration-tests",
-            "namespace": "demo"
+      "manifest": {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "metadata": {
+          "annotations": {
+            "strategy.spinnaker.io/recreate": "true"
           },
-          "spec": {
-            "backoffLimit": 0,
-            "template": {
-              "metadata": {
-                "labels": {
-                  "demo-test-environment": "prod"
-                }
-              },
-              "spec": {
-                "containers": [
-                  {
-                    "env": [
-                      {
-                        "name": "DEMO_TESTS_FAIL",
-                        "value": "false"
-                      },
-                      {
-                        "name": "DEMO_TESTS_URL",
-                        "value": "http://demo/api/demo"
-                      },
-                      {
-                        "name": "ENVOY_ADMIN_API",
-                        "value": "http://127.0.0.1:15000"
-                      },
-                      {
-                        "name": "SCUTTLE_LOGGING",
-                        "value": "true"
-                      },
-                      {
-                        "name": "ISTIO_QUIT_API",
-                        "value": "http://127.0.0.1:15020"
-                      }
-                    ],
-                    "image": "linjmeyer/istio-demo-integration-tests",
-                    "imagePullPolicy": "Always",
-                    "name": "integration-tests"
-                  }
-                ],
-                "restartPolicy": "Never"
+          "name": "integration-tests",
+          "namespace": "demo"
+        },
+        "spec": {
+          "backoffLimit": 0,
+          "template": {
+            "metadata": {
+              "labels": {
+                "demo-test-environment": "prod"
               }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "env": [
+                    {
+                      "name": "DEMO_TESTS_FAIL",
+                      "value": "false"
+                    },
+                    {
+                      "name": "DEMO_TESTS_URL",
+                      "value": "http://demo/api/demo"
+                    },
+                    {
+                      "name": "ENVOY_ADMIN_API",
+                      "value": "http://127.0.0.1:15000"
+                    },
+                    {
+                      "name": "SCUTTLE_LOGGING",
+                      "value": "true"
+                    },
+                    {
+                      "name": "ISTIO_QUIT_API",
+                      "value": "http://127.0.0.1:15020"
+                    }
+                  ],
+                  "image": "linjmeyer/istio-demo-integration-tests",
+                  "imagePullPolicy": "Always",
+                  "name": "integration-tests"
+                }
+              ],
+              "restartPolicy": "Never"
             }
           }
         }
-      ],
+      },
       "moniker": {
         "app": "gdg-demo-app"
       },
@@ -602,6 +602,5 @@
       "type": "deployManifest"
     }
   ],
-  "triggers": [],
-  "updateTs": "1629148226363"
+  "triggers": []
 }
